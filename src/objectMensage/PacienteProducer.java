@@ -1,16 +1,15 @@
 package objectMensage;
 
-import javax.jms.*;
-
 import org.apache.activemq.ActiveMQConnectionFactory;
 
-public class JavaProducer implements Runnable {
+import javax.jms.*;
+
+public class PacienteProducer implements Runnable {
 
     public void run() {
         try { // Create a connection factory.
             ActiveMQConnectionFactory factory =
                     new ActiveMQConnectionFactory("tcp://localhost:61616");
-            factory.setTrustAllPackages(true);
 
             //Create connection.
             Connection connection = factory.createConnection();
@@ -23,34 +22,30 @@ public class JavaProducer implements Runnable {
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
             // Create Destination queue
-            Destination queue = session.createQueue("Queue");
+            Destination queue = session.createQueue("br.paciente");
 
             // Create a producer
             MessageProducer producer = session.createProducer(queue);
 
             producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
-            String msg = "Aula Pos-Unipe, Arquitetura Software Web, 17/10/2020";
+            Paciente p = new Paciente();
+            p.setId(1);
+            p.setName("Victor Demetrio");
 
             // insert message
-            //TextMessage message = session.createTextMessage(msg);
-            //System.out.println("Producer Sent: " + msg);
-            //producer.send(message);
+            ObjectMessage message = session.createObjectMessage(p);
 
-            //insert object mensagem
-            Paciente paciente = new Paciente();
-            paciente.setId(1);
-            paciente.setName("victor");
-            ObjectMessage objetoMensagem = session.createObjectMessage(paciente);
-            System.out.println("Producer Sent objectMsg: "+ msg + objetoMensagem );
-            producer.send(objetoMensagem);
+            System.out.println("Paciente message enviado: " + p.getId());
+            producer.send(message);
 
             session.close();
             connection.close();
         }
         catch (Exception ex) {
-            System.out.println("Exception Occured");
+            System.out.println("Exception Occured" );
+            ex.printStackTrace();
         }
     }
-}
 
+}

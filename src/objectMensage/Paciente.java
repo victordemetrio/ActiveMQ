@@ -4,13 +4,22 @@ import java.io.Serializable;
 
 public class Paciente implements Serializable {
 
-    private int Id = 0;
-    private String Name = "";
-    public void setID(int i) {
-        this.Id =i;
+    private int id;
+    private String name;
+
+    public int getId() {
+        return id;
     }
 
-    public void setName(String n) {
-        this.Name = n;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
